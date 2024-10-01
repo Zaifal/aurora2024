@@ -1,8 +1,8 @@
 <?php
 $host = "localhost";
-$dbname = "speed_course_db";
-$username = "root";
-$password = "";
+$dbname = "aurora";
+$username = "aurora";
+$password = "@ur0r45TMK6j4y4";
 
 try {
     // Connect to MySQL database
