@@ -1,6 +1,6 @@
 <?php
 function getConnection() {
-    $conn = new mysqli('localhost', 'aurora', '', 'speed_course_db');
+    $conn = new mysqli('localhost', 'aurora', '@ur0r45TMK6j4y4', 'aurora');
 
     // Cek koneksi
     if ($conn->connect_error) {
