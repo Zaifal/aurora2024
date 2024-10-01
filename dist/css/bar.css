@@ -1,0 +1,97 @@
+.color-red {
+  stop-color: #e23131;
+}
+
+.color-yellow {
+  stop-color: #fbe500;
+}
+
+.color-green {
+  stop-color: #25cd6b;
+}
+
+.gradient-mask {
+  visibility: hidden;
+}
+
+/* Memastikan gauge tetap responsif dan menyesuaikan dengan kontainer */
+.gauge-container {
+  display: flex;
+  justify-content: space-between; /* Membuat gauge berjarak sama */
+  align-items: center; /* Menyelaraskan gauge secara vertikal */
+  gap: 10px; /* Menambahkan jarak antar gauge jika diperlukan */
+}
+
+.gauge {
+  flex: 1; /* Membuat gauge mengambil ruang yang sama */
+  max-width: 100%; /* Menjaga gauge tidak melebihi lebar kontainer */
+  height: 150px; /* Menjaga tinggi gauge sesuai dengan lebar */
+}
+
+.info-box-content {
+  padding: 10px; /* Menambahkan padding dalam kontainer */
+}
+
+/* Menyesuaikan ukuran font dan elemen di dalam info-box */
+
+@media (max-width: 768px) {
+  .gauge-container {
+    flex-direction: column; /* Menyusun gauge secara vertikal pada layar kecil */
+  }
+}
+
+.gauge .dxg-range.dxg-background-range {
+  fill: url(#gradientGauge);
+}
+.gauge .dxg-line {
+  -webkit-transform: scaleX(1.04) scaleY(1.03) translate(-4px, -4px);
+  transform: scaleX(1.04) scaleY(1.03) translate(-4px, -4px);
+}
+.gauge .dxg-line path:first-child,
+.gauge .dxg-line path:last-child {
+  display: none;
+}
+.gauge .dxg-line path:nth-child(2) {
+  stroke: #25cd6b;
+}
+.gauge .dxg-line path:nth-child(3) {
+  stroke: #fbe500;
+}
+.gauge .dxg-line path:nth-child(4) {
+  stroke: #fbe500;
+}
+.gauge .dxg-line path:nth-child(5) {
+  stroke: #fbe500;
+}
+.gauge .dxg-line path:nth-child(6) {
+  stroke: #e23131;
+}
+.gauge .dxg-elements text:first-child {
+  -webkit-transform: translate(19px, 13px);
+  transform: translate(19px, 13px);
+}
+.gauge .dxg-elements text:last-child {
+  -webkit-transform: translate(-27px, 14px);
+  transform: translate(-27px, 14px);
+}
+.gauge .dxg-value-indicator path {
+  -webkit-transform: scale(1.2) translate(0, -5px);
+  transform: scale(1.2) translate(0, -5px);
+  -webkit-transform-origin: center center;
+  transform-origin: center center;
+}
+.gauge .dxg-value-indicator .dxg-title {
+  text-transform: uppercase;
+}
+.gauge .dxg-value-indicator .dxg-title text:first-child {
+  -webkit-transform: translateY(5px);
+  transform: translateY(5px);
+}
+.gauge .dxg-value-indicator .dxg-spindle-border:nth-child(4),
+.gauge .dxg-value-indicator .dxg-spindle-hole:nth-child(5) {
+  -webkit-transform: translate(0, -109px);
+  transform: translate(0, -109px);
+}
+.gauge .dxg-value-indicator .dxg-spindle-hole {
+  fill: #26323a;
+}

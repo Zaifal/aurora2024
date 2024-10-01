@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>YouTube Video Frame Processing</title>
+  </head>
+  <body>
+    <iframe
+      width="560"
+      height="315"
+      src="https://www.youtube.com/embed/o1XInjQA9hY?si=p3I_BuA-N9A6uD_P"
+      title="YouTube video player"
+      frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allowfullscreen
+    ></iframe>
+    <canvas id="canvas" width="560" height="315"></canvas>
+    <button id="capture">Capture Frame</button>
+
+    <script>
+      const iframe = document.getElementById("youtubeVideo");
+      const canvas = document.getElementById("canvas");
+      const context = canvas.getContext("2d");
+      const captureButton = document.getElementById("capture");
+
+      captureButton.addEventListener("click", () => {
+        // Ambil frame dari video YouTube
+        context.drawImage(iframe, 0, 0, canvas.width, canvas.height);
+        const imageData = canvas.toDataURL(); // Mendapatkan data gambar
+
+        // Lakukan pemrosesan gambar di sini
+        console.log(imageData);
+      });
+    </script>
+  </body>
+</html>
