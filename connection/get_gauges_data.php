@@ -2,8 +2,7 @@
 header('Content-Type: application/json'); // Mengatur header untuk JSON
 
 // Sambungkan ke database
-$conn = new mysqli('localhost', 'root', '', 'speed_course_db');
-
+$conn = new mysqli('localhost', 'aurora', '@ur0r45TMK6j4y4', 'aurora');
 // Cek koneksi
 if ($conn->connect_error) {
     echo json_encode(array("error" => "Connection failed: " . $conn->connect_error));
