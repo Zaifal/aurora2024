@@ -445,7 +445,14 @@
                               <span class="username"
                                 ><a href="#">Monitoring</a></span
                               >
-                              <span class="description text-white text-md">Coordinate: S 3.55343 E 104.3399</span>
+                              <span class="description text-white text-md">Coordinate</span>
+
+                              <span class="description text-white text-md">Latitude: <span id="latitude"></span></span><br>
+<span class="description text-white text-md">Longitude: <span id="longitude"></span></span>
+ 
+    
+
+
                             </div>
                             <!-- /.user-block -->
                             <div class="card-tools">
@@ -464,7 +471,7 @@
                           <div class="card-body bg-navy" style="position: relative; width: 100%; padding-top: 56.25%;">
                             <iframe 
                                 class="img-fluid pad" 
-                                src="https://www.youtube.com/embed/QFz0GKdPdxE?si=vIdxlyYoZdS0p_vS" 
+                                src="https://www.youtube.com/embed/vJQ4xEoIArw?si=qldJE0S05h4oW0Fg" 
                                 frameborder="0" 
                                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                                 allowfullscreen 
@@ -888,24 +895,32 @@
 
         // Fungsi untuk memperbarui gauge dari database
         function updateGaugesFromDatabase() {
-            $.getJSON("connection/get_gauges_data.php", function (data) {
-                if (data) {
-                    if (data.sog_knot !== undefined) {
-                        gauge1.updateValue(data.sog_knot);
-                    }
-                    if (data.sog_kmh !== undefined) {
-                        gauge2.updateValue(data.sog_kmh);
-                    }
-                    if (data.cog_degree !== undefined) {
-                        gauge3.updateValue(data.cog_degree);
-                    }
-                } else {
-                    console.error("No data found or invalid data.");
-                }
-            }).fail(function() {
-                console.error("Failed to fetch data from the database.");
-            });
+    $.getJSON("connection/get_gauges_data.php", function (data) {
+        console.log(data); // Tambahkan ini untuk melihat data di konsol
+        if (data) {
+            if (data.sog_knot !== undefined) {
+                gauge1.updateValue(data.sog_knot);
+            }
+            if (data.sog_kmh !== undefined) {
+                gauge2.updateValue(data.sog_kmh);
+            }
+            if (data.cog_degree !== undefined) {
+                gauge3.updateValue(data.cog_degree);
+            }
+            // Menampilkan Latitude dan Longitude
+            if (data.lat !== undefined) {
+                $('#latitude').text(data.lat);
+            }
+            if (data.lon !== undefined) {
+                $('#longitude').text(data.lon);
+            }
+        } else {
+            console.error("No data found or invalid data.");
         }
+    }).fail(function() {
+        console.error("Failed to fetch data from the database.");
+    });
+}
 
         // Panggil fungsi untuk memperbarui gauge
         updateGaugesFromDatabase();
@@ -916,7 +931,29 @@
 });
 
 </script>
-  
+
+<script>
+  async function fetchGaugeData() {
+      try {
+          const response = await fetch('connection/get_gauges_data.php');
+          const data = await response.json();
+
+          if (data.error) {
+              console.error(data.error);
+          } else {
+              document.getElementById('latitude').textContent = data.lat;
+              document.getElementById('longitude').textContent = data.lon;
+          }
+      } catch (error) {
+          console.error('Error fetching data:', error);
+      }
+  }
+
+  // Panggil fungsi fetchGaugeData saat halaman dimuat
+  window.onload = fetchGaugeData;
+</script>
+
+
   
   
   </body>
