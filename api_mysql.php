@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $lat = $_POST['lat'];
         $lon = $_POST['lon'];
         
-        $sql = "INSERT INTO gauge (sog_knot, sog_kmh, cog_degree) VALUES (:sog_knot, :sog_kmh, :cog_degree)";
+        $sql = "INSERT INTO gauge (sog_knot, sog_kmh, cog_degree, lat, lon) VALUES (:sog_knot, :sog_kmh, :cog_degree, :lat, :lon)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':sog_knot', $sog_knot);
         $stmt->bindParam(':sog_kmh', $sog_kmh);
