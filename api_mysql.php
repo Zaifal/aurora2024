@@ -20,12 +20,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $sog_knot = $_POST['sog_knot'];
         $sog_kmh = $_POST['sog_kmh'];
         $cog_degree = $_POST['cog_degree'];
-
+        $lat = $_POST['lat'];
+        $lon = $_POST['lon'];
+        
         $sql = "INSERT INTO gauge (sog_knot, sog_kmh, cog_degree) VALUES (:sog_knot, :sog_kmh, :cog_degree)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':sog_knot', $sog_knot);
         $stmt->bindParam(':sog_kmh', $sog_kmh);
         $stmt->bindParam(':cog_degree', $cog_degree);
+        $stmt->bindParam(':lat', $lat);
+        $stmt->bindParam(':lon', $lon);
         $stmt->execute();
 
         echo json_encode(["message" => "Data gauge added successfully."]);
