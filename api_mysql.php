@@ -1,6 +1,6 @@
 <?php
 // Koneksi database
-$host = '103.60.180.19:3306';
+$host = 'localhost';
 $dbname = 'speed_course_db';
 $username = 'aurora';
 $password = '@ur0r45TMK6j4y4';
