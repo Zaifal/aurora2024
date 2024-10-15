@@ -1,9 +1,10 @@
 <?php
 // Koneksi database
-$host = 'localhost';
-$dbname = 'speed_course_db';
-$username = 'zai';
-$password = '1234';
+
+$host = "localhost";
+$dbname = "aurora";
+$username = "aurora";
+$password = "@ur0r45TMK6j4y4";
 
 try {
     $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
