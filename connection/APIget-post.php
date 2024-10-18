@@ -17,14 +17,14 @@ try {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $table = $_POST['table'];
 
-    if ($table == 'gauge') {
+    if ($table == 'gauges') {
         $sog_knot = $_POST['sog_knot'];
         $sog_kmh = $_POST['sog_kmh'];
         $cog_degree = $_POST['cog_degree'];
         $lat = $_POST['lat'];
         $lon = $_POST['lon'];
         
-        $sql = "INSERT INTO gauge (sog_knot, sog_kmh, cog_degree, lat, lon) VALUES (:sog_knot, :sog_kmh, :cog_degree, :lat, :lon)";
+        $sql = "INSERT INTO gauges (sog_knot, sog_kmh, cog_degree, lat, lon) VALUES (:sog_knot, :sog_kmh, :cog_degree, :lat, :lon)";
         $stmt = $pdo->prepare($sql);
         $stmt->bindParam(':sog_knot', $sog_knot);
         $stmt->bindParam(':sog_kmh', $sog_kmh);
