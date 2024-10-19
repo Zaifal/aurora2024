@@ -28,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $lat = $_POST['lat'];
             $lon = $_POST['lon'];
 
-            $sql = "INSERT INTO $table (`id`, `lat`, `lon`, `sog_knot`, `sog_kmh`, `cog_degree`) VALUES (NULL, :lat, :lon, :sog_knot, :sog_kmh, :cog_degree)";
+            $sql = "INSERT INTO $table (id, lat, lon, sog_knot, sog_kmh, cog_degree) VALUES (NULL, :lat, :lon, :sog_knot, :sog_kmh, :cog_degree)";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':sog_knot', $sog_knot);
             $stmt->bindParam(':sog_kmh', $sog_kmh);
