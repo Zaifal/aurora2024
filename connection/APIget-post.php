@@ -18,31 +18,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $table = $_POST['table'];
 
     if ($table == 'gauges') {
-       if (
-            isset($_POST['sog_knot']) && isset($_POST['sog_kmh']) &&
-            isset($_POST['cog_degree']) && isset($_POST['lat']) && isset($_POST['lon'])
-        ) {
-            $sog_knot = $_POST['sog_knot'];
-            $sog_kmh = $_POST['sog_kmh'];
-            $cog_degree = $_POST['cog_degree'];
-            $lat = $_POST['lat'];
-            $lon = $_POST['lon'];
+           // Check if all required parameters are set
+       if (isset($_POST['sog_knot'], $_POST['sog_kmh'], $_POST['cog_degree'], $_POST['lat'], $_POST['lon'])) {
+           $sog_knot = floatval($_POST['sog_knot']);
+           $sog_kmh = floatval($_POST['sog_kmh']);
+           $cog_degree = floatval($_POST['cog_degree']);
+           $lat = floatval($_POST['lat']);
+           $lon = floatval($_POST['lon']);
 
-            $sql = "INSERT INTO $table (id, lat, lon, sog_knot, sog_kmh, cog_degree) VALUES (NULL, :lat, :lon, :sog_knot, :sog_kmh, :cog_degree)";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':sog_knot', $sog_knot);
-            $stmt->bindParam(':sog_kmh', $sog_kmh);
-            $stmt->bindParam(':cog_degree', $cog_degree);
-            $stmt->bindParam(':lat', $lat);
-            $stmt->bindParam(':lon', $lon);
-            $stmt->execute();
+        // Prepare and execute SQL statement
+           $sql = "INSERT INTO gauges (sog_knot, sog_kmh, cog_degree, lat, lon) VALUES (:sog_knot, :sog_kmh, :cog_degree, :lat, :lon)";
+           $stmt = $pdo->prepare($sql);
+           $stmt->bindParam(':sog_knot', $sog_knot);
+           $stmt->bindParam(':sog_kmh', $sog_kmh);
+           $stmt->bindParam(':cog_degree', $cog_degree);
+           $stmt->bindParam(':lat', $lat);
+           $stmt->bindParam(':lon', $lon);
 
-            echo json_encode(["message" => "Data gauge added successfully."]);
-        } else {
-            echo json_encode(["error" => "Missing required parameters for gauges."]);
-        }
-
-        echo json_encode(["message" => "Data gauge added successfully."]);
+           if ($stmt->execute()) {
+               echo json_encode(["message" => "Data added successfully."]);
+           } else {
+               echo json_encode(["error" => "Failed to add data."]);
+           }
+    } else {
+        echo json_encode(["error" => "Missing required parameters."]);
     } elseif ($table == 'surface' || $table == 'underwater') {
         // Untuk gambar
         if (isset($_FILES['image_data'])) {
