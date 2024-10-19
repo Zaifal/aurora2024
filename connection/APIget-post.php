@@ -42,7 +42,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
            }
     } else {
         echo json_encode(["error" => "Missing required parameters."]);
-    } elseif ($table == 'surface' || $table == 'underwater') {
+           }
+    }
+    elseif ($table == 'surface' || $table == 'underwater') {
         // Untuk gambar
         if (isset($_FILES['image_data'])) {
             $image_data = file_get_contents($_FILES['image_data']['tmp_name']);
