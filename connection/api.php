@@ -8,6 +8,7 @@ try {
     // Connect to MySQL database
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    var_dump($_POST);
 
     // Check if all necessary POST parameters are set
     if (
