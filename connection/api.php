@@ -22,8 +22,8 @@ try {
         $lon = $_POST['lon'];
 
         // Prepare the SQL statement
-        $stmt = $conn->prepare("INSERT INTO gauges (sog_knot, sog_kmh, cog_degree, lat, lon) 
-                                VALUES (:sog_knot, :sog_kmh, :cog_degree, :lat, :lon)");
+        $stmt = $conn->prepare("INSERT INTO gauges (id, sog_knot, sog_kmh, cog_degree, lat, lon) 
+                                VALUES (NULL, :sog_knot, :sog_kmh, :cog_degree, :lat, :lon)");
 
         // Bind the parameters
         $stmt->bindParam(':sog_knot', $sog_knot);
