@@ -18,20 +18,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $table = $_POST['table'];
 
     if ($table == 'gauges') {
-        $sog_knot = $_POST['sog_knot'];
-        $sog_kmh = $_POST['sog_kmh'];
-        $cog_degree = $_POST['cog_degree'];
-        $lat = $_POST['lat'];
-        $lon = $_POST['lon'];
-        
-        $sql = "INSERT INTO gauges (sog_knot, sog_kmh, cog_degree, lat, lon) VALUES (:sog_knot, :sog_kmh, :cog_degree, :lat, :lon)";
-        $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(':sog_knot', $sog_knot);
-        $stmt->bindParam(':sog_kmh', $sog_kmh);
-        $stmt->bindParam(':cog_degree', $cog_degree);
-        $stmt->bindParam(':lat', $lat);
-        $stmt->bindParam(':lon', $lon);
-        $stmt->execute();
+       if (
+            isset($_POST['sog_knot']) && isset($_POST['sog_kmh']) &&
+            isset($_POST['cog_degree']) && isset($_POST['lat']) && isset($_POST['lon'])
+        ) {
+            $sog_knot = $_POST['sog_knot'];
+            $sog_kmh = $_POST['sog_kmh'];
+            $cog_degree = $_POST['cog_degree'];
+            $lat = $_POST['lat'];
+            $lon = $_POST['lon'];
+
+            $sql = "INSERT INTO gauges (sog_knot, sog_kmh, cog_degree, lat, lon) VALUES (:sog_knot, :sog_kmh, :cog_degree, :lat, :lon)";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':sog_knot', $sog_knot);
+            $stmt->bindParam(':sog_kmh', $sog_kmh);
+            $stmt->bindParam(':cog_degree', $cog_degree);
+            $stmt->bindParam(':lat', $lat);
+            $stmt->bindParam(':lon', $lon);
+            $stmt->execute();
+
+            echo json_encode(["message" => "Data gauge added successfully."]);
+        } else {
+            echo json_encode(["error" => "Missing required parameters for gauges."]);
+        }
 
         echo json_encode(["message" => "Data gauge added successfully."]);
     } elseif ($table == 'surface' || $table == 'underwater') {
