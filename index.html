@@ -270,10 +270,27 @@
                                   background-color: rgb(4, 60, 133);
                                 "
                               >
-                                <div
-                                  class="progress-bar"
-                                  style="width: 10%"
-                                ></div>
+                                <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+
+                                  <script>
+                                      // Fetch the latest balls count from the PHP API
+                                      fetch('connection/getballs-api.php')
+                                          .then(response => response.json())
+                                          .then(data => {
+                                              if (data.balls !== undefined) {
+                                                  // Misalkan 100 adalah nilai maksimum untuk persentase
+                                                  let maxBalls = 100; // Atur sesuai dengan nilai maksimum yang diharapkan
+                                                  let widthPercentage = (data.balls / maxBalls) * 100;
+                                  
+                                                  // Set the width of the progress bar
+                                                  document.getElementById('progress-bar').style.width = widthPercentage + '%';
+                                              } else {
+                                                  console.error('No balls data found');
+                                              }
+                                          })
+                                          .catch(error => console.error('Error fetching balls data:', error));
+                                  </script>
+
                               </div>
                               <span class="progress-description"> </span>
                             </div>
