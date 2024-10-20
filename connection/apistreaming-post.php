@@ -17,7 +17,7 @@ try {
         $link = $_POST['link'];
 
         // Prepare the SQL statement
-        $stmt = $conn->prepare("INSERT INTO gauges (link) 
+        $stmt = $conn->prepare("INSERT INTO link_stream (link) 
                                 VALUES (:link)");
 
         // Bind the parameters
