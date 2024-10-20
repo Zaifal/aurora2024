@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dynamic Sensor Gauge</title>
+    <style>
+        .gauge {
+            width: 200px;
+            height: 100px;
+            position: relative;
+            background: conic-gradient(green 0% 50%, #ddd 50% 100%);
+            border-radius: 100px 100px 0 0;
+            overflow: hidden;
+        }
+
+        .gauge .needle {
+            width: 2px;
+            height: 100%;
+            background: red;
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform-origin: bottom;
+            transform: rotate(0deg);
+            transition: transform 0.5s ease-in-out;
+        }
+
+        .gauge-label {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Data Sensor</h1>
+
+    <div class="gauge">
+        <div class="needle" id="gaugeNeedle"></div>
+    </div>
+    <div class="gauge-label">
+        <span id="gaugeValue">0</span> km/h
+    </div>
+
+    <script>
+        // Simulasi data sensor
+        const sensorData = {
+            sog_kmh: 0
+        };
+
+        // Fungsi untuk memperbarui gauge
+        function updateGauge(value) {
+            const needle = document.getElementById('gaugeNeedle');
+            const gaugeValue = document.getElementById('gaugeValue');
+            
+            // Update nilai dan sudut jarum
+            const maxValue = 100; // Batas atas data sensor
+            const rotation = (value / maxValue) * 180; // Mengonversi nilai ke sudut jarum
+            needle.style.transform = `rotate(${rotation}deg)`;
+
+            gaugeValue.textContent = value.toFixed(1);
+        }
+
+        // Fungsi untuk mendapatkan data sensor dari API
+        function fetchSensorData() {
+            fetch('http://aurora.stmkg.ac.id/connection/API-web.php') // Ganti dengan URL API Anda
+                .then(response => response.json())
+                .then(data => {
+                    // Update data sensor sog_kmh
+                    sensorData.sog_kmh = data.sog_kmh;
+                    updateGauge(sensorData.sog_kmh);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Simulasi pembaruan data setiap 2 detik
+        setInterval(fetchSensorData, 2000);
+    </script>
+</body>
+</html>
