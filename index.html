@@ -243,9 +243,9 @@
                           >
                             <div class="info-box-content">
                               <span class="info-box-number">Position Log</span>
-                              <span class="info-box-content"
-                                >Start/Running/Finish</span
-                              >
+                              <span class="info-box-content" id="status-info">
+                                  Start/Running/Finish
+                              </span>
 
                               <span class="progress-description"> </span>
                             </div>
@@ -259,9 +259,9 @@
                             style="background-color: #001f3f"
                           >
                             <div class="info-box-content">
-                              <span class="info-box-number">
-                                Floating Ball: 1-10</span
-                              >
+                             <span class="info-box-number" id="floating-ball-info">
+                                Floating Ball: 0
+                            </span>
 
                               <div
                                 class="progress"
@@ -272,24 +272,50 @@
                               >
                                 <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
 
-                                  <script>
-                                      // Fetch the latest balls count from the PHP API
-                                      fetch('connection/getballs-api.php')
-                                          .then(response => response.json())
-                                          .then(data => {
-                                              if (data.balls !== undefined) {
-                                                  // Misalkan 100 adalah nilai maksimum untuk persentase
-                                                  let maxBalls = 100; // Atur sesuai dengan nilai maksimum yang diharapkan
-                                                  let widthPercentage = (data.balls / maxBalls) * 100;
-                                  
-                                                  // Set the width of the progress bar
-                                                  document.getElementById('progress-bar').style.width = widthPercentage + '%';
-                                              } else {
-                                                  console.error('No balls data found');
-                                              }
-                                          })
-                                          .catch(error => console.error('Error fetching balls data:', error));
-                                  </script>
+                               
+                             
+                                <script>
+                                    // Fetch the latest balls count from the PHP API
+                                    fetch('connection/getballs-api.php') // Ganti dengan nama file PHP yang sesuai
+                                        .then(response => response.json())
+                                        .then(data => {
+                                            let width = 0; // Nilai default untuk width
+                                            let floatingBallValue = 0; // Nilai default untuk Floating Ball
+                                
+                                            if (data.balls !== undefined) {
+                                                width = data.balls; // Ambil nilai lebar dari database (10 - 100)
+                                
+                                                // Pastikan nilai width minimal 10 agar bisa dihitung
+                                                if (width < 10) {
+                                                    width = 0; // Set ke 0 jika kurang dari 10
+                                                    floatingBallValue = 0; // Set Floating Ball ke 0
+                                                } else {
+                                                    // Set the width of the progress bar
+                                                    document.getElementById('progress-bar').style.width = width + '%';
+                                
+                                                    // Hitung nilai Floating Ball dari nilai lebar
+                                                    floatingBallValue = (width / 10); // Konversi lebar ke nilai floating ball
+                                                }
+                                            }
+                                
+                                            // Update the floating ball info
+                                            document.getElementById('floating-ball-info').innerText = 'Floating Ball: ' + floatingBallValue;
+                                
+                                            // Update status info berdasarkan nilai floating ball
+                                            let statusText;
+                                            if (floatingBallValue === 0) {
+                                                statusText = "Start";
+                                            } else if (floatingBallValue >= 1 && floatingBallValue < 10) {
+                                                statusText = "Running";
+                                            } else if (floatingBallValue === 10) {
+                                                statusText = "Finish";
+                                            }
+                                            document.getElementById('status-info').innerText = statusText;
+                                
+                                        })
+                                        .catch(error => console.error('Error fetching balls data:', error));
+                                </script>
+
 
                               </div>
                               <span class="progress-description"> </span>
