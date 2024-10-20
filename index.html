@@ -428,15 +428,32 @@
                           </div>
                           <!-- /.card-header -->
                           <div class="card-body bg-navy" style="position: relative; width: 100%; padding-top: 56.25%;">
-                            <iframe 
-                                class="img-fluid pad" 
-                                src="https://www.youtube.com/embed/_8tKxtOjak8?si=Siu4P4T-rFKWD1jE" 
-                                frameborder="0" 
-                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen 
-                                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" autoplay>
-                            </iframe>
-                        </div>
+                              <iframe
+                                  id="youtube-frame"
+                                  class="img-fluid pad"
+                                  src=""
+                                  frameborder="0"
+                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                  allowfullscreen
+                                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;">
+                              </iframe>
+                          </div>
+                          
+                          <script>
+                              // Fetch the link from the PHP API
+                              fetch('connection/apistreaming-post.php')
+                                  .then(response => response.json())
+                                  .then(data => {
+                                      if (data.link) {
+                                          // Set the src of the iframe to the YouTube link from the database
+                                          document.getElementById('youtube-frame').src = data.link;
+                                      } else {
+                                          console.error('No link found');
+                                      }
+                                  })
+                                  .catch(error => console.error('Error fetching link:', error));
+                          </script>
+
                         
                         </div>
                         <!-- /.card -->
