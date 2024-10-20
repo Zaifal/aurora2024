@@ -1,4 +1,4 @@
-<?php
+<?php 
 $host = "localhost";
 $dbname = "aurora";
 $username = "aurora";
@@ -8,26 +8,19 @@ try {
     // Connect to MySQL database
     $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
     $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    var_dump($_POST);
 
-    // Check if all necessary POST parameters are set
-    if (isset($_POST['link'])) {
+    // Query to get the latest link
+    $stmt = $conn->prepare("SELECT link FROM link_stream ORDER BY id DESC LIMIT 1");
+    $stmt->execute();
 
-        // Retrieve POST data
-        $link = $_POST['link'];
+    // Fetch the result
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Prepare the SQL statement
-        $stmt = $conn->prepare("INSERT INTO link_stream (link) 
-                                VALUES (:link)");
-
-        // Bind the parameters
-        $stmt->bindParam(':link', var: $link);
-
-        // Execute the statement
-        $stmt->execute();
-        echo "New record created successfully";
+    if ($result) {
+        // Output the link as JSON for the frontend to use
+        echo json_encode($result);
     } else {
-        echo "Error: Missing required POST parameters";
+        echo json_encode(["link" => null]);
     }
 
 } catch (PDOException $e) {
