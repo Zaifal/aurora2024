@@ -439,20 +439,22 @@
                               </iframe>
                           </div>
                           
+                          
                           <script>
-                              // Fetch the link from the PHP API
-                              fetch('connection/apistreaming-post.php')
-                                  .then(response => response.json())
-                                  .then(data => {
-                                      if (data.link) {
-                                          // Set the src of the iframe to the YouTube link from the database
-                                          document.getElementById('youtube-frame').src = data.link;
-                                      } else {
-                                          console.error('No link found');
-                                      }
-                                  })
-                                  .catch(error => console.error('Error fetching link:', error));
-                          </script>
+                            // Mengambil link dari file GET
+                            fetch('connection/get_link.php')
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.link) {
+                                        // Menyisipkan link ke dalam iframe
+                                        document.getElementById('youtube-frame').src = data.link;
+                                    } else {
+                                        console.error('No link found');
+                                    }
+                                })
+                                .catch(error => console.error('Error fetching link:', error));
+                        </script>
+
 
                         
                         </div>
