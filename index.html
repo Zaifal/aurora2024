@@ -262,63 +262,62 @@
                             style="background-color: #001f3f"
                           >
                             <div class="info-box-content">
-                             <span class="info-box-number" id="floating-ball-info">
-                                Floating Ball: 0
-                            </span>
+                             <span class="info-box-number" id="floating-ball-info">Floating Ball: 0</span>
 
-                              <div
-                                class="progress"
-                                style="
-                                  height: 10px;
-                                  background-color: rgb(4, 60, 133);
-                                "
-                              >
+                              <div class="progress" style="height: 10px; background-color: rgb(4, 60, 133);">
                                 <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
-
+                              </div>
                                
-                             
+
                                 <script>
+                                  function fetchBallsData() {
                                     // Fetch the latest balls count from the PHP API
                                     fetch('connection/getballs-api.php') // Ganti dengan nama file PHP yang sesuai
-                                        .then(response => response.json())
-                                        .then(data => {
-                                            let width = 0; // Nilai default untuk width
-                                            let floatingBallValue = 0; // Nilai default untuk Floating Ball
-                                
-                                            if (data.balls !== undefined) {
-                                                width = data.balls; // Ambil nilai lebar dari database (10 - 100)
-                                
-                                                // Pastikan nilai width minimal 10 agar bisa dihitung
-                                                if (width < 10) {
-                                                    width = 0; // Set ke 0 jika kurang dari 10
-                                                    floatingBallValue = 0; // Set Floating Ball ke 0
-                                                } else {
-                                                    // Set the width of the progress bar
-                                                    document.getElementById('progress-bar').style.width = width + '%';
-                                
-                                                    // Hitung nilai Floating Ball dari nilai lebar
-                                                    floatingBallValue = (width / 10); // Konversi lebar ke nilai floating ball
-                                                }
-                                            }
-                                
-                                            // Update the floating ball info
-                                            document.getElementById('floating-ball-info').innerText = 'Floating Ball: ' + floatingBallValue;
-                                
-                                            // Update status info berdasarkan nilai floating ball
-                                            let statusText;
-                                            if (floatingBallValue === 0) {
-                                                statusText = "Start";
-                                            } else if (floatingBallValue >= 1 && floatingBallValue < 10) {
-                                                statusText = "Running";
-                                            } else if (floatingBallValue === 10) {
-                                                statusText = "Finish";
-                                            }
-                                            document.getElementById('status-info').innerText = statusText;
-                                
-                                        })
-                                        .catch(error => console.error('Error fetching balls data:', error));
+                                      .then(response => response.json())
+                                      .then(data => {
+                                        let width = 0; // Nilai default untuk width
+                                        let floatingBallValue = 0; // Nilai default untuk Floating Ball
+                              
+                                        if (data.balls !== undefined) {
+                                          width = data.balls; // Ambil nilai lebar dari database (10 - 100)
+                              
+                                          // Pastikan nilai width minimal 10 agar bisa dihitung
+                                          if (width < 10) {
+                                            width = 0; // Set ke 0 jika kurang dari 10
+                                            floatingBallValue = 0; // Set Floating Ball ke 0
+                                          } else {
+                                            // Set the width of the progress bar
+                                            document.getElementById('progress-bar').style.width = width + '%';
+                              
+                                            // Hitung nilai Floating Ball dari nilai lebar
+                                            floatingBallValue = (width / 10); // Konversi lebar ke nilai floating ball
+                                          }
+                                        }
+                              
+                                        // Update the floating ball info
+                                        document.getElementById('floating-ball-info').innerText = 'Floating Ball: ' + floatingBallValue;
+                              
+                                        // Update status info berdasarkan nilai floating ball
+                                        let statusText;
+                                        if (floatingBallValue === 0) {
+                                          statusText = "Start";
+                                        } else if (floatingBallValue >= 1 && floatingBallValue < 10) {
+                                          statusText = "Running";
+                                        } else if (floatingBallValue === 10) {
+                                          statusText = "Finish";
+                                        }
+                                        document.getElementById('status-info').innerText = statusText;
+                                      })
+                                      .catch(error => console.error('Error fetching balls data:', error));
+                                  }
+                              
+                                  // Panggil fungsi fetchBallsData setiap 5 detik (5000 milidetik)
+                                  setInterval(fetchBallsData, 1000);
+                              
+                                  // Panggilan awal saat halaman pertama kali dimuat
+                                  fetchBallsData();
                                 </script>
-
+                              
 
                               </div>
                               <span class="progress-description"> </span>
