@@ -965,10 +965,10 @@
             }
             // Menampilkan Latitude dan Longitude
             if (data.lat !== undefined) {
-                $('#latitude').text(data.lat);
+                $('#latitude').text(data.lat.toString());
             }
             if (data.lon !== undefined) {
-                $('#longitude').text(data.lon);
+                 $('#longitude').text(data.lon.toString());
             }
         } else {
             console.error("No data found or invalid data.");
@@ -1086,8 +1086,8 @@
     setInterval(function () {
       $.getJSON("connection/get_gauges_data.php", function (data) {
         if (data.lat !== undefined && data.lon !== undefined) {
-          $('#latitude').text(data.lat);
-          $('#longitude').text(data.lon);
+          $('#latitude').text(data.lat.toString());
+          $('#longitude').text(data.lon.toString());
           updateMap(data.lat, data.lon);  // Update peta dengan lat dan lon terbaru
         }
       });
