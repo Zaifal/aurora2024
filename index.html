@@ -1042,10 +1042,12 @@
 <script>
   let map, marker, polyline;
   let latLngs = [];
+  let initialLatLng; // Variabel untuk menyimpan posisi awal
 
   // Inisialisasi peta
-  function initMap() {
-    map = L.map('map').setView([0, 0], 13); // Set peta dengan lat dan lon default 0,0
+  function initMap(lat, lon) {
+    // Set peta dengan lat dan lon dari data awal
+    map = L.map('map').setView([lat, lon], 13); 
 
     // Menggunakan OpenStreetMap sebagai layer
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -1061,7 +1063,7 @@
     });
 
     // Membuat marker kapal menggunakan ikon kapal
-    marker = L.marker([0, 0], { icon: shipIcon }).addTo(map);
+    marker = L.marker([lat, lon], { icon: shipIcon }).addTo(map);
 
     // Polyline untuk melacak perjalanan kapal
     polyline = L.polyline(latLngs, { color: 'red' }).addTo(map);
@@ -1077,24 +1079,52 @@
     polyline.setLatLngs(latLngs);  // Update garis perjalanan kapal
   }
 
+  // Fungsi untuk reset tracking
+  function resetTracking() {
+    latLngs = [];  // Mengosongkan array latLngs untuk menghapus jejak pelacakan
+    polyline.setLatLngs(latLngs);  // Menghapus garis perjalanan dari peta
+
+    // Mengatur ulang marker ke posisi awal
+    if (initialLatLng) {
+      marker.setLatLng(initialLatLng); // Kembalikan marker ke posisi awal
+      map.setView(initialLatLng, 13); // Fokus ke posisi awal di peta
+    }
+  }
+
   // Inisialisasi peta ketika dokumen siap
   $(document).ready(function () {
-    initMap();
+    // Inisialisasi peta dengan posisi default (0, 0)
+    initMap(0, 0); 
 
-    // Fetch data latitude dan longitude dari server setiap detik
-    setInterval(function () {
-      $.getJSON("connection/get_gauges_data.php", function (data) {
-        if (data.lat !== undefined && data.lon !== undefined) {
-          $('#latitude').text(data.lat.toString());
-          $('#longitude').text(data.lon.toString());
-          updateMap(data.lat, data.lon);  // Update peta dengan lat dan lon terbaru
-        }
-      });
-    }, 100);  // Update setiap 1 detik
+    // Fetch data latitude dan longitude dari server
+    $.getJSON("connection/get_gauges_data.php", function (data) {
+      if (data.lat !== undefined && data.lon !== undefined) {
+        initialLatLng = [data.lat, data.lon]; // Menyimpan posisi awal
+        updateMap(data.lat, data.lon); // Update peta dengan posisi awal
+
+        // Update peta dengan data terbaru setiap detik
+        setInterval(function () {
+          $.getJSON("connection/get_gauges_data.php", function (data) {
+            if (data.lat !== undefined && data.lon !== undefined) {
+              $('#latitude').text(data.lat);
+              $('#longitude').text(data.lon);
+              updateMap(data.lat, data.lon);  // Update peta dengan lat dan lon terbaru
+            }
+          });
+        }, 1000);  // Update setiap 1 detik
+      } else {
+        console.error("Data latitude dan longitude tidak tersedia.");
+      }
+    }).fail(function() {
+      console.error("Error fetching data from server.");
+    });
+
+    // Event listener untuk tombol reset tracking
+    $('#reset-btn').click(function () {
+      resetTracking(); // Panggil fungsi resetTracking saat tombol diklik
+    });
   });
 </script>
-
-
 
   
   
