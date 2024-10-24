@@ -24,10 +24,10 @@ if ($result->num_rows > 0) {
     if ($data['lat'] === false || $data['lon'] === false) {
         echo json_encode(array("error" => "Invalid latitude or longitude format"));
     } else {
-        // Tambahkan satuan langsung pada nilai sebelum dikirim ke JS
-        $data['sog_knot'] = $data['sog_knot'] . " knot";
-        $data['sog_kmh'] = $data['sog_kmh'] . " km/h";
-        $data['cog_degree'] = $data['cog_degree'] . "°"; // Tambah derajat
+        // Hapus satuan pada nilai sebelum dikirim ke JS
+        $data['sog_knot'] = floatval($data['sog_knot']); // Kirim sebagai angka
+        $data['sog_kmh'] = floatval($data['sog_kmh']);   // Kirim sebagai angka
+        $data['cog_degree'] = floatval($data['cog_degree']); // Kirim sebagai angka
         
         echo json_encode($data);
     }
