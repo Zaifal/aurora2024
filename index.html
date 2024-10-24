@@ -829,162 +829,169 @@
 
 <script>
   $(function () {
-    class GaugeChart {
-        constructor(element, params) {
-            this._element = element;
-            this._initialValue = params.initialValue;
-            this._higherValue = params.higherValue;
-            this._title = params.title;
-            this._subtitle = params.subtitle;
-            this._startAngle = params.startAngle || 180;
-            this._endAngle = params.endAngle || 360;
-        }
+      class GaugeChart {
+          constructor(element, params) {
+              this._element = element;
+              this._initialValue = params.initialValue;
+              this._higherValue = params.higherValue;
+              this._title = params.title;
+              this._subtitle = params.subtitle;
+              this._startAngle = params.startAngle || 180;
+              this._endAngle = params.endAngle || 360;
+          }
 
-        _buildConfig() {
-            return {
-                value: this._initialValue,
-                valueIndicator: {
-                    color: "#fff",
-                },
-                geometry: {
-                    startAngle: this._startAngle,
-                    endAngle: this._endAngle,
-                },
-                scale: {
-                    startValue: 0,
-                    endValue: this._higherValue,
-                    customTicks: this._getCustomTicks(),
-                    tick: {
-                        length: 5,
-                    },
-                    label: {
-                        font: {
-                            color: "white",
-                            size: 12,
-                            family: '"Open Sans", sans-serif',
-                        },
-                    },
-                },
-                title: {
-                    verticalAlignment: "bottom",
-                    text: this._title,
-                    font: {
-                        family: '"Open Sans", sans-serif',
-                        color: "#fff",
-                        size: 0,
-                    },
-                    subtitle: {
-                        text: this._subtitle,
-                        font: {
-                            family: '"Open Sans", sans-serif',
-                            color: "#fff",
-                            weight: 700,
-                            size: 18,
-                        },
-                    },
-                },
-                onInitialized: function () {
-                    let currentGauge = $(this._element);
-                    currentGauge.find(".dxg-title text").first().attr("y", 48);
-                    currentGauge.find(".dxg-title text").last().attr("y", 28);
-                }.bind(this),
-            };
-        }
+          _buildConfig() {
+              return {
+                  value: this._initialValue,
+                  valueIndicator: {
+                      color: "#fff",
+                  },
+                  geometry: {
+                      startAngle: this._startAngle,
+                      endAngle: this._endAngle,
+                  },
+                  scale: {
+                      startValue: 0,
+                      endValue: this._higherValue,
+                      customTicks: this._getCustomTicks(),
+                      tick: {
+                          length: 5,
+                      },
+                      label: {
+                          font: {
+                              color: "white",
+                              size: 12,
+                              family: '"Open Sans", sans-serif',
+                          },
+                      },
+                  },
+                  title: {
+                      verticalAlignment: "bottom",
+                      text: this._title,
+                      font: {
+                          family: '"Open Sans", sans-serif',
+                          color: "#fff",
+                          size: 0,
+                      },
+                      subtitle: {
+                          text: this._subtitle,
+                          font: {
+                              family: '"Open Sans", sans-serif',
+                              color: "#fff",
+                              weight: 700,
+                              size: 18,
+                          },
+                      },
+                  },
+                  onInitialized: function () {
+                      let currentGauge = $(this._element);
+                      currentGauge.find(".dxg-title text").first().attr("y", 48);
+                      currentGauge.find(".dxg-title text").last().attr("y", 28);
+                  }.bind(this),
+              };
+          }
 
-        _getCustomTicks() {
-            if (this._title.includes("Degree")) {
-                return [0, 45, 90, 135, 180, 225, 270, 315, 360];
-            } else {
-                return [0, 5, 10, 15, 20, 25, 30];
-            }
-        }
+          _getCustomTicks() {
+              if (this._title.includes("Degree")) {
+                  return [0, 45, 90, 135, 180, 225, 270, 315, 360];
+              } else {
+                  return [0, 5, 10, 15, 20, 25, 30];
+              }
+          }
 
-        init() {
-            $(this._element).dxCircularGauge(this._buildConfig());
-        }
+          init() {
+              $(this._element).dxCircularGauge(this._buildConfig());
+          }
 
-        updateValue(value) {
-            const gaugeInstance = $(this._element).dxCircularGauge("instance");
-            if (gaugeInstance) {
-                gaugeInstance.option("value", value);
-                gaugeInstance.option("title.subtitle.text", `${value}`);
-            } else {
-                console.error("Gauge instance not found.");
-            }
-        }
-    }
+          updateValue(value) {
+              const gaugeInstance = $(this._element).dxCircularGauge("instance");
+              if (gaugeInstance) {
+                  gaugeInstance.option("value", value);
+                  gaugeInstance.option("title.subtitle.text", `${value}`); // Update subtitle with the numeric value
+              } else {
+                  console.error("Gauge instance not found.");
+              }
+          }
+      }
 
-    $(document).ready(function () {
-        // Inisialisasi Gauge
-        let gauge1Params = {
-            initialValue: 0,
-            higherValue: 30,
-            title: "Speed Over Ground (SOG) Knot",
-            subtitle: "0",
-        };
+      $(document).ready(function () {
+          // Inisialisasi Gauge
+          let gauge1Params = {
+              initialValue: 0,
+              higherValue: 30,
+              title: "Speed Over Ground (SOG) Knot",
+              subtitle: "0 knot", // Menambahkan satuan di subtitle
+          };
 
-        let gauge1 = new GaugeChart("#gauge1", gauge1Params);
-        gauge1.init();
+          let gauge1 = new GaugeChart("#gauge1", gauge1Params);
+          gauge1.init();
 
-        let gauge2Params = {
-            initialValue: 0,
-            higherValue: 30,
-            title: "Speed Over Ground (SOG) km/h",
-            subtitle: "0",
-        };
+          let gauge2Params = {
+              initialValue: 0,
+              higherValue: 30,
+              title: "Speed Over Ground (SOG) km/h",
+              subtitle: "0 km/h", // Menambahkan satuan di subtitle
+          };
 
-        let gauge2 = new GaugeChart("#gauge2", gauge2Params);
-        gauge2.init();
+          let gauge2 = new GaugeChart("#gauge2", gauge2Params);
+          gauge2.init();
 
-        let gauge3Params = {
-            initialValue: 0,
-            higherValue: 360,
-            title: "Course Over Ground (COG) Degree",
-            subtitle: "0",
-            startAngle: 0,
-            endAngle: 360,
-        };
+          let gauge3Params = {
+              initialValue: 0,
+              higherValue: 360,
+              title: "Course Over Ground (COG) Degree",
+              subtitle: "0°", // Menambahkan satuan di subtitle
+              startAngle: 0,
+              endAngle: 360,
+          };
 
-        let gauge3 = new GaugeChart("#gauge3", gauge3Params);
-        gauge3.init();
+          let gauge3 = new GaugeChart("#gauge3", gauge3Params);
+          gauge3.init();
 
-        // Fungsi untuk memperbarui gauge dari database
-        function updateGaugesFromDatabase() {
-    $.getJSON("connection/get_gauges_data.php", function (data) {
-        console.log(data); // Tambahkan ini untuk melihat data di konsol
-        if (data) {
-            if (data.sog_knot !== undefined) {
-                gauge1.updateValue(data.sog_knot);
-            }
-            if (data.sog_kmh !== undefined) {
-                gauge2.updateValue(data.sog_kmh);
-            }
-            if (data.cog_degree !== undefined) {
-                gauge3.updateValue(data.cog_degree);
-            }
-            // Menampilkan Latitude dan Longitude
-            if (data.lat !== undefined) {
-                $('#latitude').text(data.lat.toString());
-            }
-            if (data.lon !== undefined) {
-                 $('#longitude').text(data.lon.toString());
-            }
-        } else {
-            console.error("No data found or invalid data.");
-        }
-    }).fail(function() {
-        console.error("Failed to fetch data from the database.");
-    });
-}
+          // Fungsi untuk memperbarui gauge dari database
+          function updateGaugesFromDatabase() {
+              $.getJSON("connection/get_gauges_data.php", function (data) {
+                  console.log(data); // Melihat data yang diterima dari PHP
 
-        // Panggil fungsi untuk memperbarui gauge
-        updateGaugesFromDatabase();
+                  if (data) {
+                      if (data.sog_knot !== undefined) {
+                          const sogKnotValue = parseFloat(data.sog_knot); // Mengambil nilai numerik
+                          gauge1.updateValue(sogKnotValue);
+                          gauge1.updateSubtitle(`${sogKnotValue} knot`); // Memperbarui subtitle dengan satuan
+                      }
+                      if (data.sog_kmh !== undefined) {
+                          const sogKmhValue = parseFloat(data.sog_kmh); // Mengambil nilai numerik
+                          gauge2.updateValue(sogKmhValue);
+                          gauge2.updateSubtitle(`${sogKmhValue} km/h`); // Memperbarui subtitle dengan satuan
+                      }
+                      if (data.cog_degree !== undefined) {
+                          const cogDegreeValue = parseFloat(data.cog_degree); // Mengambil nilai numerik
+                          gauge3.updateValue(cogDegreeValue);
+                          gauge3.updateSubtitle(`${cogDegreeValue}°`); // Memperbarui subtitle dengan satuan
+                      }
 
-        // Fetch data setiap 10 ms
-        setInterval(updateGaugesFromDatabase, 1000);
-    });
-});
+                      // Menampilkan Latitude dan Longitude
+                      if (data.lat !== undefined) {
+                          $('#latitude').text(data.lat);
+                      }
+                      if (data.lon !== undefined) {
+                          $('#longitude').text(data.lon);
+                      }
+                  } else {
+                      console.error("No data found or invalid data.");
+                  }
+              }).fail(function () {
+                  console.error("Failed to fetch data from the database.");
+              });
+          }
 
+          // Panggil fungsi untuk memperbarui gauge
+          updateGaugesFromDatabase();
+
+          // Fetch data setiap 1 detik
+          setInterval(updateGaugesFromDatabase, 1000);
+      });
+  });
 </script>
 
 <script>
