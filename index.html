@@ -907,9 +907,16 @@
               const gaugeInstance = $(this._element).dxCircularGauge("instance");
               if (gaugeInstance) {
                   gaugeInstance.option("value", value);
-                  gaugeInstance.option("title.subtitle.text", `${value}`); // Update subtitle with the numeric value
               } else {
                   console.error("Gauge instance not found.");
+              }
+          }
+
+          // Tambahkan metode untuk memperbarui subtitle secara langsung
+          updateSubtitle(subtitleText) {
+              const gaugeInstance = $(this._element).dxCircularGauge("instance");
+              if (gaugeInstance) {
+                  gaugeInstance.option("title.subtitle.text", subtitleText); // Perbarui subtitle dengan teks yang diberikan
               }
           }
       }
@@ -993,6 +1000,7 @@
       });
   });
 </script>
+
 
 <script>
   async function fetchGaugeData() {
