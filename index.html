@@ -31,24 +31,18 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="dist/css/adminlte.min.css" />
     <link rel="stylesheet" href="dist/css/bar.css" />
+    <link rel="stylesheet" href="dist/css/css.css" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
 
-    <style>
-      .btn-getstarted {
-        padding: 10px 20px;
-        border-radius: 5px;
-        text-align: center;
-        text-decoration: none;
-        font-size: 16px;
-        cursor: pointer;
-        display: inline-block;
-      }
-      #stopButton {
-        display: none; /* Tombol ini disembunyikan pada awalnya */
-      }
-    </style>
+
+    
   </head> 
   <body
     class="hold-transition dark-mode sidebar-mini layout-fixed layout-navbar-fixed layout-footer-fixed"
@@ -112,6 +106,8 @@
         </li>
 
         <li class="nav-item list-unstyled">
+          <a onclick="showOverlay()"  class="btn-getstarted" style="background-color: rgb(31, 31, 145); color: white">Show Data</a>
+
             <a
                 class="btn-getstarted"
                 href="#"
@@ -548,14 +544,43 @@
                 <!-- ./card-body -->
                 
       <!-- /.content-wrapper -->
+      <div id="overlay">
+        <div class="overlay-content">
+            <button class="close-button" onclick="hideOverlay()">Close</button>
+            <div class="button-container">
+              <button onclick="downloadData('xlsx')">Download XLSX</button>
+              <button onclick="downloadData('csv')">Download CSV</button>
+            </div>
+            <div class="table-container">
+                <table id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Waktu</th>
+                            <th>Latitude</th>
+                            <th>Longitude</th>
+                            <th>SOG (Knots)</th>
+                            <th>SOG (KMH)</th>
+                            <th>COG (Degrees)</th>
+                            <th>Underwater Image</th>
+                            <th>Surface Image</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+            <div id="errorMessage" class="error"></div>
+        </div>
+    </div>
 
       <!-- Main Footer -->
+       
       <footer class="main-footer bg-navy">
         <strong
           >Copyright &copy; 2024
           <a href="https://www.instagram.com/aurora.stmkg" style="color: aqua">Aurora STMKG</a>.</strong
         >
-        All rights reserved.
+        <a href="#" onclick="unlockAccess()">All rights reserved.</a>
+
         <div
           class="float-right d-none d-sm-inline-block"
           style="
@@ -676,6 +701,8 @@
     <script src="dist/js/pages/dashboard2.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
     <script src="https://cdn3.devexpress.com/jslib/17.1.6/js/dx.all.js"></script>
+    <script src="dist/js/script-index.js"></script>
+
 
     
     <script>
@@ -1052,7 +1079,6 @@
 
 </script>
 
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
 <script>
   let map, marker, polyline;
@@ -1141,7 +1167,112 @@
   });
 </script>
 
-  
+<script>
+  function showOverlay() {
+      document.getElementById("overlay").style.display = "block";
+      getAllData();
+  }
+
+  function hideOverlay() {
+      document.getElementById("overlay").style.display = "none";
+  }
+
+  function getAllData() {
+      $.ajax({
+          url: 'connection/get_all_for_table.php',
+          method: 'GET',
+          dataType: 'json',
+          success: function (response) {
+              let html = '';
+              response.forEach(item => {
+                  let underwaterImage = item.underwater_image 
+                      ? `<a href="${item.underwater_image}" target="_blank">View Image</a>` 
+                      : 'No Image';
+
+                  let surfaceImage = item.surface_image 
+                      ? `<a href="${item.surface_image}" target="_blank">View Image</a>` 
+                      : 'No Image';
+
+                  html += `
+                      <tr>
+                          <td>${item.waktu}</td>
+                          <td>${item.lat}</td>
+                          <td>${item.lon}</td>
+                          <td>${item.sog_knot}</td>
+                          <td>${item.sog_kmh}</td>
+                          <td>${item.cog_degree}</td>
+                          <td>${underwaterImage}</td>
+                          <td>${surfaceImage}</td>
+                      </tr>
+                  `;
+              });
+              $('#dataTable tbody').html(html);
+          },
+          error: function () {
+              $('#errorMessage').text('Failed to load data.');
+          }
+      });
+  }
+
+  function downloadData(format) {
+      let table = document.getElementById("dataTable");
+      let wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+      let now = new Date();
+      let fileName = `Aurora-${now.toISOString().slice(0, 19).replace(/:/g, '-')}.${format}`;
+
+      if (format === 'xlsx') {
+          XLSX.writeFile(wb, fileName);
+      } else if (format === 'csv') {
+          let csv = XLSX.utils.sheet_to_csv(wb.Sheets["Sheet1"]);
+          let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          let link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.setAttribute('download', fileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      }
+  }
+</script>
+<script>
+  let accessGranted = false; // Access status
+
+  // Prevent Right-Click
+  document.addEventListener('contextmenu', function (e) {
+      if (!accessGranted) {
+          e.preventDefault();
+          alert('Access denied!');
+      }
+  });
+
+  // Prevent Keyboard Shortcuts
+  document.addEventListener('keydown', function (e) {
+      if (!accessGranted) {
+          // Block Ctrl+U and Ctrl+Shift+I
+          if (e.ctrlKey && (e.key === 'u' || e.key === 'U' || e.shiftKey && e.key === 'I')) {
+              e.preventDefault();
+              alert('Access denied!');
+          }
+          // Block F12 (DevTools)
+          if (e.key === 'F12') {
+              e.preventDefault();
+              alert('Access denied!');
+          }
+      }
+  });
+
+  // Function to unlock access with a secret code
+  function unlockAccess() {
+      const secretCode = prompt('Enter the secret code:');
+      if (secretCode === 'stmkg2024') { // Replace with your own secret code
+          accessGranted = true;
+          alert('Access granted! You can now use right-click and shortcuts.');
+      } else {
+          alert('Incorrect secret code!');
+      }
+  }
+</script>
+
   
   </body>
 
