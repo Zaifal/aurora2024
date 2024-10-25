@@ -108,20 +108,7 @@
         <li class="nav-item list-unstyled">
           <a onclick="showOverlay()"  class="btn-getstarted" style="background-color: rgb(31, 31, 145); color: white">Show Data</a>
 
-            <a
-                class="btn-getstarted"
-                href="#"
-                id="recordButton"
-                style="background-color: rgb(31, 31, 145); color: white"
-                >Rekam Layar</a
-            >
-            <a
-                class="btn-getstarted"
-                href="#"
-                id="stopButton"
-                style="background-color: rgb(164, 12, 12); color: white"
-                >Hentikan Rekaman</a
-            >
+           
         </li>
 
         <li class="nav-item">
@@ -561,8 +548,7 @@
                             <th>SOG (Knots)</th>
                             <th>SOG (KMH)</th>
                             <th>COG (Degrees)</th>
-                            <th>Underwater Image</th>
-                            <th>Surface Image</th>
+                            
                         </tr>
                     </thead>
                     <tbody></tbody>
@@ -594,6 +580,7 @@
         </div>
       </footer>
     </div>
+    <!--
     <script>
       let mediaRecorder;
       let chunks = [];
@@ -675,7 +662,7 @@
         isRecording = false;
       });
     </script>
-
+   -->
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
     <script src="plugins/jquery/jquery.min.js"></script>
@@ -1088,12 +1075,11 @@
   // Inisialisasi peta
   function initMap(lat, lon) {
     // Set peta dengan lat dan lon dari data awal
-    map = L.map('map').setView([lat, lon], 13);
+    map = L.map('map').setView([lat, lon], 20); 
 
-    // Menggunakan Esri World Imagery sebagai layer
-    L.tileLayer('https://{s}.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{y}', {
-      subdomains: ['server', 'services'],
-      attribution: '&copy; <a href="https://www.esri.com/">Esri</a> contributors'
+    // Menggunakan MapTiler sebagai layer satelit
+    L.tileLayer('https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=w295NjYHoN2w0MEoCA0c', {
+      attribution: '&copy; <a href="https://www.maptiler.com/copyright">MapTiler</a>',
     }).addTo(map);
 
     // Menambahkan ikon kapal
@@ -1136,7 +1122,7 @@
   // Inisialisasi peta ketika dokumen siap
   $(document).ready(function () {
     // Inisialisasi peta dengan posisi default (0, 0)
-    initMap(0, 0);
+    initMap(-7.332054, 112.756477); 
 
     // Fetch data latitude dan longitude dari server
     $.getJSON("connection/get_gauges_data.php", function (data) {
@@ -1157,7 +1143,7 @@
       } else {
         console.error("Data latitude dan longitude tidak tersedia.");
       }
-    }).fail(function () {
+    }).fail(function() {
       console.error("Error fetching data from server.");
     });
 
@@ -1167,7 +1153,6 @@
     });
   });
 </script>
-
 
 <script>
   function showOverlay() {
@@ -1187,14 +1172,6 @@
           success: function (response) {
               let html = '';
               response.forEach(item => {
-                  let underwaterImage = item.underwater_image 
-                      ? `<a href="${item.underwater_image}" target="_blank">View Image</a>` 
-                      : 'No Image';
-
-                  let surfaceImage = item.surface_image 
-                      ? `<a href="${item.surface_image}" target="_blank">View Image</a>` 
-                      : 'No Image';
-
                   html += `
                       <tr>
                           <td>${item.waktu}</td>
@@ -1203,8 +1180,6 @@
                           <td>${item.sog_knot}</td>
                           <td>${item.sog_kmh}</td>
                           <td>${item.cog_degree}</td>
-                          <td>${underwaterImage}</td>
-                          <td>${surfaceImage}</td>
                       </tr>
                   `;
               });
@@ -1217,37 +1192,26 @@
   }
 
   function downloadData(format) {
-    let table = document.getElementById("dataTable");
-    let wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
-
-    // Convert `Waktu` cells explicitly to text to retain full datetime format
-    let ws = wb.Sheets["Sheet1"];
-    const range = XLSX.utils.decode_range(ws['!ref']);
-    for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) { // Skip header
-        let waktuCell = `A${rowNum + 1}`;
-        if (ws[waktuCell]) {
-            ws[waktuCell].t = 's';  // Set cell type to 's' for string
-        }
-    }
-
-    let now = new Date();
-    let fileName = `Aurora-${now.toISOString().slice(0, 19).replace(/:/g, '-')}.${format}`;
-
-    if (format === 'xlsx') {
-        XLSX.writeFile(wb, fileName);
-    } else if (format === 'csv') {
-        let csv = XLSX.utils.sheet_to_csv(wb.Sheets["Sheet1"]);
-        let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-        let link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.setAttribute('download', fileName);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    }
-}
-
+      let table = document.getElementById("dataTable");
+      let wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
+      let now = new Date();
+      let fileName = `Aurora-${now.toISOString().slice(0, 19).replace(/:/g, '-')}.${format}`;
+      if (format === 'xlsx') {
+          XLSX.writeFile(wb, fileName);
+      } else if (format === 'csv') {
+          let csv = XLSX.utils.sheet_to_csv(wb.Sheets["Sheet1"]);
+          let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+          let link = document.createElement('a');
+          link.href = URL.createObjectURL(blob);
+          link.setAttribute('download', fileName);
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+      }
+  }
 </script>
+
+
 <script>
   let accessGranted = false; // Access status
 
