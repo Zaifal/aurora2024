@@ -142,14 +142,7 @@
 <!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-1 bg-navy no-border">
     <!-- Brand Logo -->
-   <a href="https://kki.kemdikbud.go.id/" 
-       class="brand-link bg-navy" 
-       style="padding-left: 50px" 
-       target="_blank" 
-       rel="noopener noreferrer">
-       Kemdikbud Link
-    </a>
-
+    <a href="index3.html" class="brand-link bg-navy" style="padding-left: 50px">
         <i class="fas fa-ship"></i>
         <span class="brand-text font-weight-bold"> KKI - 2024</span>
     </a>
@@ -1095,11 +1088,12 @@
   // Inisialisasi peta
   function initMap(lat, lon) {
     // Set peta dengan lat dan lon dari data awal
-    map = L.map('map').setView([lat, lon], 13); 
+    map = L.map('map').setView([lat, lon], 13);
 
-    // Menggunakan OpenStreetMap sebagai layer
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    // Menggunakan Esri World Imagery sebagai layer
+    L.tileLayer('https://{s}.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{x}/{y}', {
+      subdomains: ['server', 'services'],
+      attribution: '&copy; <a href="https://www.esri.com/">Esri</a> contributors'
     }).addTo(map);
 
     // Menambahkan ikon kapal
@@ -1142,7 +1136,7 @@
   // Inisialisasi peta ketika dokumen siap
   $(document).ready(function () {
     // Inisialisasi peta dengan posisi default (0, 0)
-    initMap(0, 0); 
+    initMap(0, 0);
 
     // Fetch data latitude dan longitude dari server
     $.getJSON("connection/get_gauges_data.php", function (data) {
@@ -1163,7 +1157,7 @@
       } else {
         console.error("Data latitude dan longitude tidak tersedia.");
       }
-    }).fail(function() {
+    }).fail(function () {
       console.error("Error fetching data from server.");
     });
 
@@ -1173,6 +1167,7 @@
     });
   });
 </script>
+
 
 <script>
   function showOverlay() {
@@ -1222,24 +1217,36 @@
   }
 
   function downloadData(format) {
-      let table = document.getElementById("dataTable");
-      let wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
-      let now = new Date();
-      let fileName = `Aurora-${now.toISOString().slice(0, 19).replace(/:/g, '-')}.${format}`;
+    let table = document.getElementById("dataTable");
+    let wb = XLSX.utils.table_to_book(table, { sheet: "Sheet1" });
 
-      if (format === 'xlsx') {
-          XLSX.writeFile(wb, fileName);
-      } else if (format === 'csv') {
-          let csv = XLSX.utils.sheet_to_csv(wb.Sheets["Sheet1"]);
-          let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-          let link = document.createElement('a');
-          link.href = URL.createObjectURL(blob);
-          link.setAttribute('download', fileName);
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-      }
-  }
+    // Convert `Waktu` cells explicitly to text to retain full datetime format
+    let ws = wb.Sheets["Sheet1"];
+    const range = XLSX.utils.decode_range(ws['!ref']);
+    for (let rowNum = range.s.r + 1; rowNum <= range.e.r; rowNum++) { // Skip header
+        let waktuCell = `A${rowNum + 1}`;
+        if (ws[waktuCell]) {
+            ws[waktuCell].t = 's';  // Set cell type to 's' for string
+        }
+    }
+
+    let now = new Date();
+    let fileName = `Aurora-${now.toISOString().slice(0, 19).replace(/:/g, '-')}.${format}`;
+
+    if (format === 'xlsx') {
+        XLSX.writeFile(wb, fileName);
+    } else if (format === 'csv') {
+        let csv = XLSX.utils.sheet_to_csv(wb.Sheets["Sheet1"]);
+        let blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        let link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('download', fileName);
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+}
+
 </script>
 <script>
   let accessGranted = false; // Access status
