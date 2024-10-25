@@ -39,28 +39,49 @@
             border-radius: 8px;
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.9);
             width: 80%;
-            max-height: 80%;
+            max-height: 90%;
             overflow-y: auto;
         }
 
+       
         .table-container {
+            max-height: 400px; /* Tentukan tinggi maksimal kontainer tabel */
+            overflow-y: auto;  /* Scrollbar vertikal pada kontainer tabel */
+            margin-top: 10px;
             overflow-x: auto;
-        }
 
+        }
+        
+
+     
         table {
             width: 100%;
             border-collapse: collapse;
             border-spacing: 0;
             border: 1px solid #ddd;
             background-color: #1b2735;
+            max-height: 400px; /* Batas tinggi untuk tabel */
+            overflow-y: auto; /* Scrollbar vertikal pada tabel saja */
+            display: block; /* Membuat tabel sebagai blok untuk memungkinkan overflow-y */
         }
-
+        thead {
+            display: table; /* Membiarkan header tetap terlihat di atas */
+            width: calc(100% - 0px); /* Menghindari pergeseran karena scrollbar */
+        }
+        tbody {
+            display: block;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
         th, td {
+            width: 1.25%; /* Atur lebar kolom sesuai kebutuhan Anda */
             border: 1px solid #3a4757;
             padding: 8px;
-            text-align: left;
+            text-align: center;
             color: white;
         }
+
 
         th {
             background-color: #2c3e50;
@@ -90,6 +111,7 @@
 
         button:hover {
             background-color: #3498db;
+            border-radius: 10px;
         }
 
         .close-button {
