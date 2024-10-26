@@ -4857,7 +4857,6 @@ input[type="button"].btn-block {
   -ms-flex: 1 1 auto;
   flex: 1 1 auto;
   min-height: 1px;
-  padding: 1.25rem;
 }
 
 .card-title {
@@ -35424,7 +35423,7 @@ body.iframe-mode-fullscreen .content-wrapper.iframe-mode {
 }
 
 .content-wrapper.kanban .card .card-body {
-  padding: .5rem;
+  padding: 0;
 }
 
 .content-wrapper.kanban .card.card-row {
@@ -35451,7 +35450,7 @@ body.iframe-mode-fullscreen .content-wrapper.iframe-mode {
   padding: .5rem .75rem;
 }
 
-.content-wrapper.kanban .card.card-row .card .card-body {
+.content-wrapper.kanban .card.card-row .card  {
   padding: .75rem;
 }
 
