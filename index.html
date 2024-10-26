@@ -374,19 +374,23 @@
                               <!-- /.card-header -->
                               <div class="card-body bg-navy">
                                 <div id="surface-image-container" style="position: relative; text-align: center;">
-                                    <!-- Konten gambar surface -->
-                                    <p>Loading image...</p>
+                                    <!-- Elemen gambar surface -->
+                                    <img id="surface-image" src="" alt="Loading image..." style="width: 100%; height: auto;">
+                                    
                                     <!-- Geotag untuk Surface Image -->
-                                    <div style="z-index: 999; position: absolute; bottom: 1px; left: 1px; text-align: left; font-size: 10px; padding: 2px; background-color: rgba(0, 0, 0, 0.5); border-radius: 4px; color: white;">
-                                        <p>
-                                            Datetime: <span id="day"> </span>, <span id="date"></span>, <span id="time"></span><br />
-                                            Lat: <span id="latitude"></span> | Lon: <span id="longitude"></span><br />
-                                            SOG: <span id="sogKnot">0</span> knot | <span id="sogKmh">0</span> km/h<br />
-                                            COG: <span id="cogDegree">0</span>°
-                                        </p>
-                                    </div>
+                                   
                                 </div>
+                               
                             </div>
+                            <div style="z-index: 999; position: absolute; bottom: 1px; left: 1px; text-align: left; font-size: 10px; padding: 2px; background-color: rgba(0, 0, 0, 0.5); border-radius: 4px; color: white;">
+                                <p>
+                                    Datetime: <span id="day"> </span>, <span id="date"></span>, <span id="time"></span><br />
+                                    Lat: <span id="latitude"></span> | Lon: <span id="longitude"></span><br />
+                                    SOG: <span id="sogKnot">0</span> knot | <span id="sogKmh">0</span> km/h<br />
+                                    COG: <span id="cogDegree">0</span>°
+                                </p>
+                            </div>
+                            
                               <!-- /.card-body -->
                           </div>
                       </div>
@@ -418,15 +422,16 @@
                                     <!-- Konten gambar underwater -->
                                     <p>Loading image...</p>
                                     <!-- Geotag untuk Underwater Image -->
-                                    <div style="z-index: 999; position: absolute; bottom: 1px; left: 1px; text-align: left; font-size: 10px; padding: 2px; background-color: rgba(0, 0, 0, 0.5); border-radius: 4px; color: white;">
-                                        <p>
-                                            Datetime: <span id="day"> </span>, <span id="date"></span>, <span id="time"></span><br />
-                                            Lat: <span id="latitude"></span> | Lon: <span id="longitude"></span><br />
-                                            SOG: <span id="sogKnotValue">0</span> knot | <span id="sogKmhValue">0</span> km/h<br />
-                                            COG: <span id="cogDegreeValue">0</span>°
-                                        </p>
-                                    </div>
+                                    
                                 </div>
+                            </div>
+                            <div style="z-index: 999; position: absolute; bottom: 1px; left: 1px; text-align: left; font-size: 10px; padding: 2px; background-color: rgba(0, 0, 0, 0.5); border-radius: 4px; color: white;">
+                                <p>
+                                    Datetime: <span id="day"> </span>, <span id="date"></span>, <span id="time"></span><br />
+                                    Lat: <span id="latitude"></span> | Lon: <span id="longitude"></span><br />
+                                    SOG: <span id="sogKnot">0</span> knot | <span id="sogKmh">0</span> km/h<br />
+                                    COG: <span id="cogDegree">0</span>°
+                                </p>
                             </div>
                               <!-- /.card-body -->
                           </div>
@@ -1119,85 +1124,86 @@
   
     // Inisialisasi peta
     function initMap(lat, lon) {
-      // Set peta dengan lat dan lon dari data awal
-      map = L.map('map').setView([lat, lon], 20); 
+        // Set peta dengan lat dan lon dari data awal
+        map = L.map('map').setView([lat, lon], 20); 
   
-      // Menggunakan OpenStreetMap sebagai layer
-      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
+        // Menggunakan OpenStreetMap sebagai layer
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
   
-      // Menambahkan ikon kapal
-      let shipIcon = L.icon({
-        iconUrl: 'dist/img/aurora-marker.png', // Ganti dengan URL ikon kapal yang benar
-        iconSize: [40, 40], // Ukuran ikon
-        iconAnchor: [20, 20], // Titik tengah ikon untuk penempatan yang tepat
-        popupAnchor: [0, -20] // Menyesuaikan posisi popup jika ada
-      });
+        // Menambahkan ikon kapal
+        let shipIcon = L.icon({
+            iconUrl: 'dist/img/aurora-marker.png', // Ganti dengan URL ikon kapal yang benar
+            iconSize: [40, 40], // Ukuran ikon
+            iconAnchor: [20, 20], // Titik tengah ikon untuk penempatan yang tepat
+            popupAnchor: [0, -20] // Menyesuaikan posisi popup jika ada
+        });
   
-      // Membuat marker kapal menggunakan ikon kapal
-      marker = L.marker([lat, lon], { icon: shipIcon }).addTo(map);
+        // Membuat marker kapal menggunakan ikon kapal
+        marker = L.marker([lat, lon], { icon: shipIcon }).addTo(map);
   
-      // Polyline untuk melacak perjalanan kapal
-      polyline = L.polyline(latLngs, { color: 'red' }).addTo(map);
+        // Polyline untuk melacak perjalanan kapal
+        polyline = L.polyline(latLngs, { color: 'red' }).addTo(map);
     }
   
     // Fungsi untuk memperbarui posisi kapal di peta
     function updateMap(lat, lon) {
-      const latLng = [lat, lon];
-      latLngs.push(latLng);  // Tambahkan koordinat baru ke array latLngs
+        const latLng = [lat, lon];
+        latLngs.push(latLng);  // Tambahkan koordinat baru ke array latLngs
   
-      marker.setLatLng(latLng); // Pindahkan marker ke posisi baru
-      map.setView(latLng, 13);  // Fokus ke lokasi baru di peta
-      polyline.setLatLngs(latLngs);  // Update garis perjalanan kapal
+        marker.setLatLng(latLng); // Pindahkan marker ke posisi baru
+        map.setView(latLng, 20);  // Fokus ke lokasi baru di peta dengan zoom level 20
+        polyline.setLatLngs(latLngs);  // Update garis perjalanan kapal
     }
   
     // Fungsi untuk reset tracking
     function resetTracking() {
-      latLngs = [];  // Mengosongkan array latLngs untuk menghapus jejak pelacakan
-      polyline.setLatLngs(latLngs);  // Menghapus garis perjalanan dari peta
+        latLngs = [];  // Mengosongkan array latLngs untuk menghapus jejak pelacakan
+        polyline.setLatLngs(latLngs);  // Menghapus garis perjalanan dari peta
   
-      // Mengatur ulang marker ke posisi awal
-      if (initialLatLng) {
-        marker.setLatLng(initialLatLng); // Kembalikan marker ke posisi awal
-        map.setView(initialLatLng, 13); // Fokus ke posisi awal di peta
-      }
+        // Mengatur ulang marker ke posisi awal
+        if (initialLatLng) {
+            marker.setLatLng(initialLatLng); // Kembalikan marker ke posisi awal
+            map.setView(initialLatLng, 20); // Fokus ke posisi awal di peta dengan zoom level 20
+        }
     }
   
     // Inisialisasi peta ketika dokumen siap
     $(document).ready(function () {
-      // Inisialisasi peta dengan posisi default (0, 0)
-      initMap(-7.332054, 112.756477); 
+        // Inisialisasi peta dengan posisi default (0, 0)
+        initMap(-7.332054, 112.756477); 
   
-      // Fetch data latitude dan longitude dari server
-      $.getJSON("connection/get_gauges_data.php", function (data) {
-        if (data.lat !== undefined && data.lon !== undefined) {
-          initialLatLng = [data.lat, data.lon]; // Menyimpan posisi awal
-          updateMap(data.lat, data.lon); // Update peta dengan posisi awal
+        // Fetch data latitude dan longitude dari server
+        $.getJSON("connection/get_gauges_data.php", function (data) {
+            if (data.lat !== undefined && data.lon !== undefined) {
+                initialLatLng = [data.lat, data.lon]; // Menyimpan posisi awal
+                updateMap(data.lat, data.lon); // Update peta dengan posisi awal
   
-          // Update peta dengan data terbaru setiap detik
-          setInterval(function () {
-            $.getJSON("connection/get_gauges_data.php", function (data) {
-              if (data.lat !== undefined && data.lon !== undefined) {
-                $('#latitude').text(data.lat);
-                $('#longitude').text(data.lon);
-                updateMap(data.lat, data.lon);  // Update peta dengan lat dan lon terbaru
-              }
-            });
-          }, 1000);  // Update setiap 1 detik
-        } else {
-          console.error("Data latitude dan longitude tidak tersedia.");
-        }
-      }).fail(function() {
-        console.error("Error fetching data from server.");
-      });
+                // Update peta dengan data terbaru setiap detik
+                setInterval(function () {
+                    $.getJSON("connection/get_gauges_data.php", function (data) {
+                        if (data.lat !== undefined && data.lon !== undefined) {
+                            $('#latitude').text(data.lat);
+                            $('#longitude').text(data.lon);
+                            updateMap(data.lat, data.lon);  // Update peta dengan lat dan lon terbaru
+                        }
+                    });
+                }, 1000);  // Update setiap 1 detik
+            } else {
+                console.error("Data latitude dan longitude tidak tersedia.");
+            }
+        }).fail(function() {
+            console.error("Error fetching data from server.");
+        });
   
-      // Event listener untuk tombol reset tracking
-      $('#reset-btn').click(function () {
-        resetTracking(); // Panggil fungsi resetTracking saat tombol diklik
-      });
+        // Event listener untuk tombol reset tracking
+        $('#reset-btn').click(function () {
+            resetTracking(); // Panggil fungsi resetTracking saat tombol diklik
+        });
     });
-  </script>
+</script>
+
 
 <script>
   function showOverlay() {
