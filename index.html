@@ -372,7 +372,7 @@
                                   <!-- /.card-tools -->
                               </div>
                               <!-- /.card-header -->
-                              <div class="card-body bg-navy">
+                              <div class="card-body p-0 bg-navy">
                                 <div id="surface-image-container" style="position: relative; text-align: center;">
                                     <!-- Elemen gambar surface -->
                                     <img id="surface-image" src="" alt="Loading image..." style="width: 100%; height: auto;">
@@ -382,10 +382,10 @@
                                 </div>
                                 <div style="z-index: 999; position: absolute; bottom: 1px; left: 1px; text-align: left; font-size: 10px; padding: 2px; background-color: rgba(0, 0, 0, 0.5); border-radius: 4px; color: white;">
                                     <p>
-                                        Datetime: <span id="day"> </span>, <span id="date"></span>, <span id="time"></span><br />
-                                        Lat: <span id="latitude"></span> | Lon: <span id="longitude"></span><br />
-                                        SOG: <span id="sogKnot">0</span> knot | <span id="sogKmh">0</span> km/h<br />
-                                        COG: <span id="cogDegree">0</span>°
+                                        Datetime: <span id="day2"> </span>, <span id="date2"></span>, <span id="time2"></span><br />
+                                        Lat: <span id="latitude2"></span> | Lon: <span id="longitude2"></span><br />
+                                        SOG: <span id="sogKnot2">0</span> knot | <span id="sogKmh2">0</span> km/h<br />
+                                        COG: <span id="cogDegree2">0</span>°
                                     </p>
                                 </div>
                                
@@ -418,7 +418,7 @@
                                   <!-- /.card-tools -->
                               </div>
                               <!-- /.card-header -->
-                              <div class="card-body" style="background-color: #001f3f">
+                              <div class="card-body p-0" style="background-color: #001f3f">
                                 <div id="underwater-image-container" style="position: relative; text-align: center;">
                                     <!-- Konten gambar underwater -->
                                     <p>Loading image...</p>
@@ -427,10 +427,10 @@
                                 </div>
                                 <div style="z-index: 999; position: absolute; bottom: 1px; left: 1px; text-align: left; font-size: 10px; padding: 2px; background-color: rgba(0, 0, 0, 0.5); border-radius: 4px; color: white;">
                                     <p>
-                                        Datetime: <span id="day"> </span>, <span id="date"></span>, <span id="time"></span><br />
-                                        Lat: <span id="latitude"></span> | Lon: <span id="longitude"></span><br />
-                                        SOG: <span id="sogKnot">0</span> knot | <span id="sogKmh">0</span> km/h<br />
-                                        COG: <span id="cogDegree">0</span>°
+                                        Datetime: <span id="day3"> </span>, <span id="date3"></span>, <span id="time3"></span><br />
+                                        Lat: <span id="latitude3"></span> | Lon: <span id="longitude3"></span><br />
+                                        SOG: <span id="sogKnot3">0</span> knot | <span id="sogKmh3">0</span> km/h<br />
+                                        COG: <span id="cogDegree3">0</span>°
                                     </p>
                                 </div>
                             </div>
@@ -836,31 +836,41 @@
 </script>-->
 
 <script>
-  function updateDateTime() {
-      const now = new Date();
-
-      // Mendapatkan nama hari
-      const options = { weekday: 'long' };
-      const day = now.toLocaleDateString('en-US', options);
-
-      // Mendapatkan tanggal, bulan, tahun
-      const date = now.toLocaleDateString('en-GB'); // DD/MM/YYYY
-
-      // Mendapatkan jam, menit, detik
-      const time = now.toLocaleTimeString('en-GB'); // hh:mm:ss
-
-      // Mengupdate elemen di HTML
-      document.getElementById('day').textContent = day;
-      document.getElementById('date').textContent = date;
-      document.getElementById('time').textContent = time;
-  }
-
-  // Memanggil fungsi untuk pertama kali
-  updateDateTime();
-
-  // Memperbarui waktu setiap detik
-  setInterval(updateDateTime, 1000);
-</script>
+    function updateDateTime() {
+        const now = new Date();
+  
+        // Mendapatkan nama hari
+        const options = { weekday: 'long' };
+        const day = now.toLocaleDateString('en-US', options);
+  
+        // Mendapatkan tanggal, bulan, tahun
+        const date = now.toLocaleDateString('en-GB'); // DD/MM/YYYY
+  
+        // Mendapatkan jam, menit, detik
+        const time = now.toLocaleTimeString('en-GB'); // hh:mm:ss
+  
+        // Mengupdate elemen di HTML untuk set 1
+        document.getElementById('day').textContent = day;
+        document.getElementById('date').textContent = date;
+        document.getElementById('time').textContent = time;
+  
+        // Mengupdate elemen di HTML untuk set 2
+        document.getElementById('day2').textContent = day;
+        document.getElementById('date2').textContent = date;
+        document.getElementById('time2').textContent = time;
+  
+        // Mengupdate elemen di HTML untuk set 3
+        document.getElementById('day3').textContent = day;
+        document.getElementById('date3').textContent = date;
+        document.getElementById('time3').textContent = time;
+    }
+  
+    // Memanggil fungsi untuk pertama kali
+    updateDateTime();
+  
+    // Memperbarui waktu setiap detik
+    setInterval(updateDateTime, 1000);
+  </script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
@@ -885,6 +895,62 @@
             document.getElementById('sogKnot').innerText = 'Error';
             document.getElementById('sogKmh').innerText = 'Error';
             document.getElementById('cogDegree').innerText = 'Error';
+        }
+    }
+
+    // Memanggil fungsi fetchData setiap 1 detik
+    setInterval(fetchData, 1000);
+    // Panggil pertama kali untuk menampilkan data segera
+    fetchData();
+</script>
+<script>
+    async function fetchData() {
+        try {
+            const response = await fetch('connection/get_gauges_data.php'); // Ganti dengan URL API Anda
+            const data = await response.json();
+
+            if (data.error) {
+                document.getElementById('sogKnot2').innerText = 'Error';
+                document.getElementById('sogKmh2').innerText = 'Error';
+                document.getElementById('cogDegree2').innerText = 'Error';
+            } else {
+                // Menampilkan data di dalam elemen <span>
+                document.getElementById('sogKnot2').innerText = data.sog_knot.toFixed(2);
+                document.getElementById('sogKmh2').innerText = data.sog_kmh.toFixed(2);
+                document.getElementById('cogDegree2').innerText = data.cog_degree.toFixed(2);
+            }
+        } catch (error) {
+            document.getElementById('sogKnot2').innerText = 'Error';
+            document.getElementById('sogKmh2').innerText = 'Error';
+            document.getElementById('cogDegree2').innerText = 'Error';
+        }
+    }
+
+    // Memanggil fungsi fetchData setiap 1 detik
+    setInterval(fetchData, 1000);
+    // Panggil pertama kali untuk menampilkan data segera
+    fetchData();
+</script>
+<script>
+    async function fetchData() {
+        try {
+            const response = await fetch('connection/get_gauges_data.php'); // Ganti dengan URL API Anda
+            const data = await response.json();
+
+            if (data.error) {
+                document.getElementById('sogKnot3').innerText = 'Error';
+                document.getElementById('sogKmh3').innerText = 'Error';
+                document.getElementById('cogDegree3').innerText = 'Error';
+            } else {
+                // Menampilkan data di dalam elemen <span>
+                document.getElementById('sogKnot3').innerText = data.sog_knot.toFixed(2);
+                document.getElementById('sogKmh3').innerText = data.sog_kmh.toFixed(2);
+                document.getElementById('cogDegree3').innerText = data.cog_degree.toFixed(2);
+            }
+        } catch (error) {
+            document.getElementById('sogKnot3').innerText = 'Error';
+            document.getElementById('sogKmh3').innerText = 'Error';
+            document.getElementById('cogDegree3').innerText = 'Error';
         }
     }
 
@@ -1050,6 +1116,20 @@
                       if (data.lon !== undefined) {
                           $('#longitude').text(data.lon);
                       }
+                      // Menampilkan Latitude dan Longitude
+                      if (data.lat !== undefined) {
+                          $('#latitude2').text(data.lat);
+                      }
+                      if (data.lon !== undefined) {
+                          $('#longitude2').text(data.lon);
+                      }
+                      // Menampilkan Latitude dan Longitude
+                      if (data.lat !== undefined) {
+                          $('#latitude3').text(data.lat);
+                      }
+                      if (data.lon !== undefined) {
+                          $('#longitude3').text(data.lon);
+                      }
                   } else {
                       console.error("No data found or invalid data.");
                   }
@@ -1079,6 +1159,10 @@
           } else {
               document.getElementById('latitude').textContent = data.lat;
               document.getElementById('longitude').textContent = data.lon;
+              document.getElementById('latitude2').textContent = data.lat;
+              document.getElementById('longitude2').textContent = data.lon;
+              document.getElementById('latitude3').textContent = data.lat;
+              document.getElementById('longitude3').textContent = data.lon;
           }
       } catch (error) {
           console.error('Error fetching data:', error);
@@ -1188,6 +1272,7 @@
                         if (data.lat !== undefined && data.lon !== undefined) {
                             $('#latitude').text(data.lat);
                             $('#longitude').text(data.lon);
+                            
                             updateMap(data.lat, data.lon);  // Update peta dengan lat dan lon terbaru
                         }
                     });
